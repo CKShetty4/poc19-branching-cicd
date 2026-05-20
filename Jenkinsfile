@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "ckshetty4/demo-app"
+        IMAGE_NAME = "poc8-demo"
         IMAGE_TAG = "latest"
     }
 
@@ -15,7 +15,8 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/ckshetty4/demo-app.git'
+                git branch: 'main',
+                url: 'https://github.com/ckshetty4/poc8-sonarqube-demo.git'
             }
         }
 
@@ -28,7 +29,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=demo-app'
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=poc8-demo'
                 }
             }
         }
@@ -39,32 +40,11 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            steps {
-                sh 'trivy image $IMAGE_NAME:$IMAGE_TAG'
-            }
-        }
-
-        stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker push $IMAGE_NAME:$IMAGE_TAG
-                    '''
-                }
-            }
-        }
-
         stage('Deploy Container') {
             steps {
                 sh '''
-                docker rm -f demo-app-container || true
-                docker run -d -p 8081:8081 --name demo-app-container $IMAGE_NAME:$IMAGE_TAG
+                docker rm -f poc8-container || true
+                docker run -d -p 8081:8081 --name poc8-container $IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
