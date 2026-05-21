@@ -10,4 +10,9 @@ public class HelloController {
     public String home() {
         return "Welcome to POC19 CI/CD Branching Strategy Demo";
     }
+
+    @GetMapping("/login")
+    public String login(){
+        return "This is a Login Page";
+    }
 }
