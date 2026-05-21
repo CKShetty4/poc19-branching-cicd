@@ -8,6 +8,6 @@ public class HelloController {
 
     @GetMapping("/")
     public String home() {
-        return "New Changes in Demo!";
+        return "Welcome to POC19 CI/CD Branching Strategy Demo";
     }
 }
