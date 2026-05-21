@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "poc8-demo"
+        IMAGE_NAME = "poc19-demo"
         IMAGE_TAG = "latest"
     }
 
@@ -16,21 +16,13 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/ckshetty4/poc8-sonarqube-demo.git'
+                url: 'https://github.com/CKShetty4/poc19-branching-cicd.git'
             }
         }
 
         stage('Build Application') {
             steps {
                 sh 'mvn clean package'
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=poc8-demo'
-                }
             }
         }
 
@@ -43,8 +35,8 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 sh '''
-                docker rm -f poc8-container || true
-                docker run -d -p 8081:8081 --name poc8-container $IMAGE_NAME:$IMAGE_TAG
+                docker rm -f poc19-container || true
+                docker run -d -p 8085:8081 --name poc19-container $IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
