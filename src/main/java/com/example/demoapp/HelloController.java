@@ -17,6 +17,6 @@ public class HelloController {
     }
     @GetMapping("/signup")
     public String signup(){
-        return "This is a Sign-Up Page";
+        return "This is a Sign-Up Page New";
     }
 }
